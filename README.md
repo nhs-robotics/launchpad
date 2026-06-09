@@ -20,6 +20,12 @@ robot.loop();
 ### `TeleopBase`
 Abstract `OpMode` subclass that creates a `Robot` and two `Gamepad` wrappers. Override `registerSubclasses()` to call `robot.register(...)` for each subsystem.
 
+### `MotorTestTeleop`
+An `Opmode` designed for testing multiple motors. Automatically detects active motors and is able to manually manipulate speed and velocity via `Gamepad`
+
+### `ServoTestTelop`
+An `Opmode` designed for testing multiple servos. Automatically detects active motors and is able to manually position and speed via `Gamepad`
+
 ### `Constants`
 Robot-specific tuning values: drive motor config, mecanum coefficient matrix, Pinpoint offsets, movement velocity/steepness, and GoBilda motor tick counts.
 
