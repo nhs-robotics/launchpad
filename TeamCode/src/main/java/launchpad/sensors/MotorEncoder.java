@@ -28,6 +28,15 @@ public class MotorEncoder implements Encoder {
         return Angles.normalizeAngle((getTicks() / ticksPerRotation) * 2.0 * Math.PI);
     }
 
+    /**
+     * Converts a position in radians to the equivalent encoder ticks.
+     * @param radians the position in radians
+     * @return the corresponding encoder tick count
+     */
+    public int toTicks(double radians) {
+        return (int) Math.round((radians / (2.0 * Math.PI)) * ticksPerRotation);
+    }
+
     public void reset() {
         this.encoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         this.encoder.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,9 +17,7 @@ public class SimultaneousAction implements Action {
 
         this.actions.add(first);
 
-        for (Action action : rest) {
-            this.add(action, false);
-        }
+        actions.addAll(Arrays.asList(rest));
     }
 
     public SimultaneousAction() {
@@ -73,20 +72,18 @@ public class SimultaneousAction implements Action {
         }
     }
 
-    public void add(@NonNull Action action, boolean init, boolean removeOld) {
+    public void addAndInitialize(@NonNull Action action, boolean removeOld) {
         if (removeOld) {
             removeActionsOfType(action.getClass());
         }
 
         actions.add(action);
 
-        if (init) {
-            action.init();
-        }
+        action.init();
     }
 
-    public void add(@NonNull Action action, boolean init) {
-        this.add(action, init, false);
+    public void addAndInitialize(@NonNull Action action) {
+        this.addAndInitialize(action, false);
     }
 
     @Nullable
