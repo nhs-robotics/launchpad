@@ -55,10 +55,18 @@ public class SequentialAction implements Action {
     }
 
     @Nullable
-    public Action getActions() {
+    public Action getRunningAction() {
         if (isComplete()) {
             return null;
         }
         return actions.get(currentIndex);
+    }
+
+    @Nullable
+    public List<Action> getActions() {
+        if (isComplete()) {
+            return null;
+        }
+        return actions;
     }
 }

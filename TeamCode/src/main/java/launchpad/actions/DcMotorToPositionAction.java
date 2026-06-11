@@ -3,91 +3,41 @@ package launchpad.actions;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
-import java.util.function.Supplier;
-
-import launchpad.controllers.PIDController;
-import launchpad.geometry.Angles;
 import launchpad.hardware.Motor;
 
 public class DcMotorToPositionAction implements Action {
     private final Motor motor;
+    private final int targetTicks;
+    private final double power;
+    private boolean started = false;
 
     /**
-     * The target rotation of the motor in radians from starting point
+     * @param motor the motor to move
+     * @param targetRotation the target position in radians from encoder zero
+     * @param power maximum power [0, 1] applied while moving
      */
-    private final Supplier<Double> targetRotation;
-
-    private final double rotationalSpeed;
-
-    private final double maxRotationalError;
-
-    private final PIDController pid;
-
-    /**
-     * @param motor the motor to rotate
-     * @param targetRotation the target rotation in radians
-     * @param rotationalSpeed speed multiplier for the rotation
-     * @param maxRotationalError max error, in radians, to be considered complete
-     * @param pidCoefficients the coefficients for the rotational PID
-     */
-    public DcMotorToPositionAction(@NonNull Motor motor, double targetRotation, double rotationalSpeed, double maxRotationalError, @NonNull PIDCoefficients pidCoefficients) {
+    public DcMotorToPositionAction(@NonNull Motor motor, double targetRotation, double power) {
         this.motor = motor;
-        this.targetRotation = () -> targetRotation;
-        this.maxRotationalError = maxRotationalError;
-        this.rotationalSpeed = rotationalSpeed;
-
-        pid = new PIDController(pidCoefficients, () -> Angles.angleDifference(motor.getMotorEncoder().getPosition(), targetRotation));
-    }
-
-    /**
-     * @param motor the motor to rotate
-     * @param targetRotation the supplier of the target rotation in radians
-     * @param rotationalSpeed speed multiplier for the rotation
-     * @param maxRotationalError max error, in radians, to be considered complete
-     * @param pidCoefficients the coefficients for the rotational PID
-     */
-    public DcMotorToPositionAction(@NonNull Motor motor, @NonNull Supplier<Double> targetRotation, double rotationalSpeed, double maxRotationalError, @NonNull PIDCoefficients pidCoefficients) {
-        this.motor = motor;
-        this.targetRotation = targetRotation;
-        this.maxRotationalError = maxRotationalError;
-        this.rotationalSpeed = rotationalSpeed;
-
-        pid = new PIDController(pidCoefficients, () -> Angles.angleDifference(motor.getMotorEncoder().getPosition(), targetRotation.get()));
+        this.targetTicks = motor.getMotorEncoder().toTicks(targetRotation);
+        this.power = power;
     }
 
     @Override
     public void init() {
-        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor.getMotor().setTargetPosition(targetTicks);
+        motor.getMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.getMotor().setPower(power);
+        started = false;
     }
-
-    private boolean complete = false;
 
     @Override
     public void loop() {
-        double rotationalError = Angles.angleDifference(motor.getMotorEncoder().getPosition(), targetRotation.get());
-
-        if (Math.abs(rotationalError) <= maxRotationalError) {
-            motor.setPower(0);
-            complete = true;
-            return;
-        }
-
-        double power = pid.getPower();
-        motor.setPower(power * rotationalSpeed);
+        started = true;
     }
 
     @Override
     public boolean isComplete() {
-        return complete;
-    }
-
-    public void setPIDCoefficients(PIDCoefficients pidCoefficients) {
-        pid.setCoefficients(pidCoefficients);
-    }
-
-    public double getRotationalError() {
-        return Angles.angleDifference(motor.getMotorEncoder().getPosition(), targetRotation.get());
+        return started && !motor.getMotor().isBusy();
     }
 }
