@@ -28,6 +28,7 @@ public abstract class TeleopBase extends OpMode {
     public void loop() {
         mainGamepad.loop();
         secondaryGamepad.loop();
+        runningActions.loop();
         robot.loop();
     }
 
