@@ -66,7 +66,12 @@ public class Testing3AxisAlignment implements Action {
                 velocityRotational
         );
 
-        driver.setAbsoluteVelocity(localizer.getCurrentPosition(), vector);
+        if (Math.sqrt(xError * xError + yError * yError) <= maxDistanceError && Math.abs(rotationalError) <= maxRotationalError) {
+            driver.stop();
+            complete = true;
+        } else {
+            driver.setAbsoluteVelocity(localizer.getCurrentPosition(), vector);
+        }
     }
 
     @Override
