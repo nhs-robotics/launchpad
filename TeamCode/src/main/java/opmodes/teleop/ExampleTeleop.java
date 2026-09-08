@@ -1,22 +1,32 @@
 package opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import launchpad.TeleopBase;
 import launchpad.actions.SleepAction;
 import launchpad.geometry.MovementVector;
+import launchpad.hardware.Motor;
+import launchpad.movement.mecanum.MecanumCoefficientMatrix;
+import launchpad.movement.mecanum.MecanumCoefficientSet;
 import launchpad.movement.mecanum.MecanumDriver;
 
 @TeleOp(name="Example Teleop")
 public class ExampleTeleop extends TeleopBase {
 
     private MecanumDriver driver;
+    private Motor fl, fr, bl, br;
 
     @Override
     public void init() {
         super.init();
         // Create a mecanum driver
-        // driver = new MecanumDriver(fl, fr, bl, br, new MecanumCoefficientMatrix(new MecanumCoefficientSet(1, 1, 1, 1)));
+        fl = new Motor(hardwareMap.get(DcMotorEx.class, "fl"));
+        fr = new Motor(hardwareMap.get(DcMotorEx.class, "fr"));
+        bl = new Motor(hardwareMap.get(DcMotorEx.class, "bl"));
+        br = new Motor(hardwareMap.get(DcMotorEx.class, "br"));
+
+        driver = new MecanumDriver(fl, fr, bl, br, new MecanumCoefficientMatrix(new MecanumCoefficientSet(1, 1, 1, 1)));
 
         // Make a button do something
         mainGamepad.aButton.onPress(() -> {
@@ -46,12 +56,12 @@ public class ExampleTeleop extends TeleopBase {
     @Override
     public void loop() {
         // Automatically loops all registered subclasses
-        super.loop();
+//        super.loop();
+        mainGamepad.loop();
 
         // Loop all localization classes, etc, here
 
-
         // Drive using controller (Note: in the future, add encoder wires to each drive motor, and change this to driver.setRelativeVelocity())
-        // driver.setRelativePower(new MovementVector(mainGamepad.leftJoystick.getX(), mainGamepad.leftJoystick.getY(), mainGamepad.rightJoystick.getX()));
+         driver.setRelativePower(new MovementVector(mainGamepad.leftJoystick.getX(), mainGamepad.leftJoystick.getY(), mainGamepad.rightJoystick.getX()));
     }
 }
