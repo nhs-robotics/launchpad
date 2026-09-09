@@ -62,6 +62,6 @@ public class ExampleTeleop extends TeleopBase {
         // Loop all localization classes, etc, here
 
         // Drive using controller (Note: in the future, add encoder wires to each drive motor, and change this to driver.setRelativeVelocity())
-         driver.setRelativePower(new MovementVector(mainGamepad.leftJoystick.getX(), mainGamepad.leftJoystick.getY(), mainGamepad.rightJoystick.getX()));
+         driver.setRelativePower(new MovementVector(mainGamepad.leftJoystick.getY(), mainGamepad.leftJoystick.getX(), mainGamepad.rightJoystick.getX()));
     }
 }
