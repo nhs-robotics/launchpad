@@ -1,5 +1,6 @@
 package launchpad;
 
+
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import launchpad.hardware.MotorConfig;
@@ -14,8 +15,7 @@ public class Constants {
     public static final double ROTATION_RADIUS_IN = 9.9851;
     public static final double MAX_WHEEL_VELOCITY = 100;
     public static final double MIN_WHEEL_VELOCITY = 5;
-
-    public static final MecanumCoefficientMatrix MECANUM_COEFFICIENT_MATRIX = new MecanumCoefficientMatrix(new MecanumCoefficientSet(-1, 1, -1, 1), ROTATION_RADIUS_IN);
+    public static final MecanumCoefficientMatrix MECANUM_COEFFICIENT_MATRIX = new MecanumCoefficientMatrix(new MecanumCoefficientSet(1, 1, -1, -1), ROTATION_RADIUS_IN);
 
     public static final double PINPOINT_X_OFFSET = 22.225;
     public static final double PINPOINT_Y_OFFSET = -62.5;
@@ -26,6 +26,7 @@ public class Constants {
         public static final double GOBILDA_312RPM_5203_2402_0019_TICKS_PER_ROTATION = ((((1+(46.0/17.0))) * (1+(46.0/11.0))) * 28);
         public static final double GOBILDA_1620RPM_5203_2402_0003_TICKS_PER_ROTATION = ((1+(46.0/17.0)) * 28);
         public static final double GOBILDA_6000RPM_5203_2402_0001_TICKS_PER_ROTATION = 28;
+        public static final double GOBILDA_435RPM_5203_2402_0014_TICKS_PER_ROTATION = ((((1+(46/17))) * (1+(46/17))) * 28);
     }
 
     public static final MotorConfig DRIVE_MOTOR_CONFIG = new MotorConfig(
